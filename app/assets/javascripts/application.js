@@ -48,7 +48,7 @@
 		]
 	};
 
-	$.ajax("/dashboard/statistics")
+	$.getJSON("/dashboard/statistics")
 	 .done(function(stats) {
 	 	console.log("success");
 	 	displayStatistics(stats)

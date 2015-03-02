@@ -1,15 +1,18 @@
+require 'request_log_analyzer'
+
 class DashboardController < ApplicationController
-	before_action :load_report
+	before_action :load_report#, except: [:index]
 
 	def index
-		@trackers = @r.aggregators.first.trackers
+		
 	end
 
 	def statistics
 		trackers = @r.aggregators.first.trackers
 
+		@parsed_requests = @r.source.parsed_requests
 		@tracker_http_status = trackers.find { |x| x.title == "HTTP statuses returned" }
-		@tracker_http_methods = trackers.find{ |x| x.title == "HTTP methods"}
+		@tracker_timespan = trackers.find { |x| x.title == "Request timespan"}
 	end
 
 	private 
