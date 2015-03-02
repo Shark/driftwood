@@ -69,7 +69,7 @@
 		]
 	};
 
-	$.getJSON("/dashboard2/statistics")
+	$.getJSON("/dashboard/statistics")
 	 .done(function(stats) {
 	 	console.log("success");
 	 	displayStatistics(stats)
@@ -97,7 +97,7 @@ function displayStatistics(stats) {
 	}
 
 	if("statusCodes" in stats) {
-		var statusCodeFrequency = stats.statusCodes.map(function(current, index, array) {
+		var statusCodes = stats.statusCodes.map(function(current, index, array) {
 			return {
 				label: current.statusCode,
 				value: current.count,
@@ -105,10 +105,10 @@ function displayStatistics(stats) {
 			};
 		});
 
-		var statusCodeFrequencyCanvas = $('#statusCodeFrequency').get(0).getContext("2d");
-		var statusCodeFrequencyChart = new Chart(statusCodeFrequencyCanvas).Pie(statusCodeFrequency, options);
-		$('#statusCodeFrequencyLegend').html(statusCodeFrequencyChart.generateLegend());
-		$('#statusCodeFrequency').removeAttr('width').removeAttr("height").removeAttr("style");
+		var statusCodeCountCanvas = $('#statusCodeCountCanvas').get(0).getContext("2d");
+		var statusCodeCountChart = new Chart(statusCodeCountCanvas).Pie(statusCodes, options);
+		$('#statusCodeCountLegend').html(statusCodeCountChart.generateLegend());
+		$('#statusCodeCountCanvas').removeAttr('width').removeAttr("height").removeAttr("style");
 	}
 
 	if("parsedRequests" in stats) {

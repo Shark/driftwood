@@ -12,19 +12,20 @@
 		%div.col-sm-6
 	%div.row
 		%div.col-sm-4
-			%h3 Status Code Frequency
+			%h3 Status Code Counts
 			%div.row
 				%div.col-sm-8
-					%canvas.chart#statusCodeFrequency
+					%canvas.chart#statusCodeCountCanvas
 				%div.col-sm-4
-					%div#statusCodeFrequencyLegend
+					%div#statusCodeCountLegend
 		%div.col-sm-4
 			%h3 Route Hits
 			%div.row
-				%div.col-sm-8
+				%div.col-sm-12
 					%canvas.chart#routeHits
-				%div.col-sm-4
+			%div.row
+				%div.col-sm-12
 					%div#routeHitsLegend
 		%div.col-sm-4
 			%h3 Process Blockers
-			%canvas.chart#processBlockers
+			%canvas.chart#processBlockers{:height=>400}
