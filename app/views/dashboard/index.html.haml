@@ -1,3 +1,30 @@
-%h1 Status Code Frequency
-
-%canvas#statusCodeFrequency{:height => "450", :width => "450"}
+%div.container-fluid
+	%div.row
+		%div.col-sm-6
+			%h3 General Stats
+			%ul
+				%li
+					Parsed Requests:
+					%span#parsedRequests
+				%li
+					Request Timespan:
+					%span#requestTimespan
+		%div.col-sm-6
+	%div.row
+		%div.col-sm-4
+			%h3 Status Code Frequency
+			%div.row
+				%div.col-sm-8
+					%canvas.chart#statusCodeFrequency
+				%div.col-sm-4
+					%div#statusCodeFrequencyLegend
+		%div.col-sm-4
+			%h3 Route Hits
+			%div.row
+				%div.col-sm-8
+					%canvas.chart#routeHits
+				%div.col-sm-4
+					%div#routeHitsLegend
+		%div.col-sm-4
+			%h3 Process Blockers
+			%canvas.chart#processBlockers

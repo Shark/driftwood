@@ -1,7 +1,7 @@
 require 'request_log_analyzer'
 
 class DashboardController < ApplicationController
-	before_action :load_report#, except: [:index]
+	before_action :load_report, except: [:index]
 
 	def index
 		
@@ -22,7 +22,7 @@ class DashboardController < ApplicationController
       :output       => 'FixedWidth',
       :format				=> :rails3,
       :silent				=> true,
-      :source_files => '/home/gerrit/dev/development_small.log'
+      :source_files => '/home/felix/Arbeitsfläche/development.log'
     )
     @r.run!
 	end

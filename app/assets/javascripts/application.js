@@ -36,50 +36,126 @@
 
  $(function() {
 	var sampleData = {
-		"statusCodeFrequency": [
+		"statusCodes": [
 			{
 				statusCode: 200,
-				frequency: 400
+				count: 400
 			},
 			{
 				statusCode: 404,
-				frequency: 600
+				count: 600
+			}
+		],
+		"parsedRequests": 5000,
+		"requestTimespan": {
+			"begin": "000000",
+			"end": "000000"
+		},
+		"requestDetails": [
+			{
+				"route": "BlaController.bla",
+				"hits": 2,
+				"sum": 2,
+				"mean": 2.3,
+				"min": 0,
+				"max": 4
+			}
+		],
+		"processBlockers": [
+			{
+				"route": "BlaController.bla",
+				"hits": 10
 			}
 		]
 	};
 
-	$.getJSON("/dashboard/statistics")
+	$.getJSON("/dashboard2/statistics")
 	 .done(function(stats) {
 	 	console.log("success");
 	 	displayStatistics(stats)
-	 }).fail(function() {
-	 	console.log("fail");
+	 }).fail(function(jqXHR, textStatus) {
+	 	console.log("fail ("+textStatus+")");
 	 	displayStatistics(sampleData);
 	 });
 });
 
 function displayStatistics(stats) {
 	var colors = [
-		"#048192",
-		"#4012A3",
-		"#EECD02",
-		"#EE7302",
-		"#014F5A",
-		"#250765",
-		"#947F00",
-		"#944700"
+		"#4D4D4D",
+		"#5DA5DA",
+		"#FAA43A",
+		"#60BD68",
+		"#F17CB0",
+		"#B2912F",
+		"#B276B2",
+		"#DECF3F",
+		"#F15854"
 	];
 
-	if("statusCodeFrequency" in stats) {
-		var statusCodeFrequency = stats.statusCodeFrequency.map(function(current, index, array) {
+	var options = {
+		legendTemplate: '<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li class="legend-item" style=\"background-color:<%=segments[i].fillColor%>\"><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>'
+	}
+
+	if("statusCodes" in stats) {
+		var statusCodeFrequency = stats.statusCodes.map(function(current, index, array) {
 			return {
 				label: current.statusCode,
-				value: current.frequency,
+				value: current.count,
 				color: colors[index % colors.length]
 			};
 		});
 
 		var statusCodeFrequencyCanvas = $('#statusCodeFrequency').get(0).getContext("2d");
-		var statusCodeFrequencyChart = new Chart(statusCodeFrequencyCanvas).Pie(statusCodeFrequency, {});
+		var statusCodeFrequencyChart = new Chart(statusCodeFrequencyCanvas).Pie(statusCodeFrequency, options);
+		$('#statusCodeFrequencyLegend').html(statusCodeFrequencyChart.generateLegend());
+		$('#statusCodeFrequency').removeAttr('width').removeAttr("height").removeAttr("style");
+	}
+
+	if("parsedRequests" in stats) {
+		$('span#parsedRequests').html(stats.parsedRequests);
+	}
+
+	if("requestTimespan" in stats) {
+		$('span#requestTimespan').html(stats.requestTimespan.begin+'-'+stats.requestTimespan.end);
+	}
+
+	if("requestDetails" in stats) {
+		var routeHits = stats.requestDetails.map(function(current, index, array) {
+			return {
+				label: current.route,
+				value: current.hits,
+				color: colors[index % colors.length]
+			}
+		});
+
+		var routeHitsCanvas = $('#routeHits').get(0).getContext("2d");
+		var routeHitsChart = new Chart(routeHitsCanvas).Pie(routeHits, options);
+		$('#routeHitsLegend').html(routeHitsChart.generateLegend());
+		$('#routeHits').removeAttr('width').removeAttr("height").removeAttr("style");
+	}
+
+	if("processBlockers" in stats) {
+		var processBlockers = {
+			labels: stats.processBlockers.map(function(current, index, array) {
+				return current.route;
+			}),
+			datasets: [
+				{
+					label: 'blocked requests (>1 sec)',
+					fillColor: "rgba(151,187,205,0.5)",
+            		strokeColor: "rgba(151,187,205,0.8)",
+            		highlightFill: "rgba(151,187,205,0.75)",
+            		highlightStroke: "rgba(151,187,205,1)",
+	            	data: stats.processBlockers.map(function(current, index, array) {
+	            		return current.hits;
+	            	})
+            	}
+			]
+		};
+
+		var processBlockersCanvas = $('#processBlockers').get(0).getContext("2d");
+		var processBlockersChart = new Chart(processBlockersCanvas).Bar(processBlockers, {});
+		$('#processBlockersLegend').html(processBlockersChart.generateLegend());
+		$('#processBlockers').removeAttr('width').removeAttr("height").removeAttr("style");
 	}
 }
