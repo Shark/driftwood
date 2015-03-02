@@ -12,5 +12,74 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require twitter/bootstrap
 //= require turbolinks
 //= require_tree .
+//= require Chart
+
+/*
+	API
+	Route: /dashboard/statistics
+	{
+		"statusCodeFrequency": [
+			{}
+				statusCode: 200,
+				frequency: 0.4
+			},
+			{
+				statusCode: 404,
+				frequency: 0.6
+			}
+		]
+	}
+ */
+
+ $(function() {
+	var sampleData = {
+		"statusCodeFrequency": [
+			{
+				statusCode: 200,
+				frequency: 400
+			},
+			{
+				statusCode: 404,
+				frequency: 600
+			}
+		]
+	};
+
+	$.ajax("/dashboard/statistics")
+	 .done(function(stats) {
+	 	console.log("success");
+	 	displayStatistics(stats)
+	 }).fail(function() {
+	 	console.log("fail");
+	 	displayStatistics(sampleData);
+	 });
+});
+
+function displayStatistics(stats) {
+	var colors = [
+		"#048192",
+		"#4012A3",
+		"#EECD02",
+		"#EE7302",
+		"#014F5A",
+		"#250765",
+		"#947F00",
+		"#944700"
+	];
+
+	if("statusCodeFrequency" in stats) {
+		var statusCodeFrequency = stats.statusCodeFrequency.map(function(current, index, array) {
+			return {
+				label: current.statusCode,
+				value: current.frequency,
+				color: colors[index % colors.length]
+			};
+		});
+
+		var statusCodeFrequencyCanvas = $('#statusCodeFrequency').get(0).getContext("2d");
+		var statusCodeFrequencyChart = new Chart(statusCodeFrequencyCanvas).Pie(statusCodeFrequency, {});
+	}
+}
