@@ -36,14 +36,14 @@
 
  $(function() {
 	var sampleData = {
-		"statusCodeFrequency": [
+		"statusCodes": [
 			{
 				statusCode: 200,
-				frequency: 400
+				count: 400
 			},
 			{
 				statusCode: 404,
-				frequency: 600
+				count: 600
 			}
 		]
 	};
@@ -70,16 +70,16 @@ function displayStatistics(stats) {
 		"#944700"
 	];
 
-	if("statusCodeFrequency" in stats) {
-		var statusCodeFrequency = stats.statusCodeFrequency.map(function(current, index, array) {
+	if("statusCodes" in stats) {
+		var statusCodes = stats.statusCodes.map(function(current, index, array) {
 			return {
 				label: current.statusCode,
-				value: current.frequency,
+				value: current.count,
 				color: colors[index % colors.length]
 			};
 		});
 
-		var statusCodeFrequencyCanvas = $('#statusCodeFrequency').get(0).getContext("2d");
-		var statusCodeFrequencyChart = new Chart(statusCodeFrequencyCanvas).Pie(statusCodeFrequency, {});
+		var statusCodesCanvas = $('#statusCodes').get(0).getContext("2d");
+		var statusCodesChart = new Chart(statusCodesCanvas).Pie(statusCodes, {});
 	}
 }
