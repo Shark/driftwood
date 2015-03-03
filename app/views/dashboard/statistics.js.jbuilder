@@ -1,31 +1,31 @@
-json.fileName @logfile_name
+json.fileName @statistics.filename
 
-json.parsedRequests @parsed_requests
+json.parsedRequests @statistics.parsed_request_count
 
-json.statusCodes @tracker_http_status do |status, count|
+json.requestTimespan do
+	json.begin @statistics.parsed_timespan.first_timestamp
+	json.end @statistics.parsed_timespan.last_timestamp
+end
+
+json.statusCodes @statistics.http_status_codes.each do |status, count|
 	json.statusCode status
 	json.count count
 end
 
-json.httpMethods @tracker_http_methods do |method, count|
+json.httpMethods @statistics.http_methods.each do |method, count|
 	json.method method
 	json.count count
 end
 
-json.requestTimespan do
-	json.begin @tracker_timespan.first_timestamp
-	json.end @tracker_timespan.last_timestamp
-end
+json.requestDetails @statistics.request_details
 
-json.requestDetails @tracker_request_details
+json.databaseTime @statistics.database_time
 
-json.databaseTime @database_request_details
+json.viewRenderingTime @statistics.view_time
 
-json.viewRenderingTime @view_rendering_details
+json.partialsRenderingTime @statistics.partials_time
 
-json.partialsRenderingTime @partials_rendering_details
-
-json.processBlockers @tracker_process_blockers do |route, count|
+json.processBlockers @statistics.process_blockers do |route, count|
 	json.route route
 	json.hits count
 end

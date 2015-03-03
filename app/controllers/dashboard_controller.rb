@@ -1,7 +1,6 @@
 require 'request_log_analyzer'
 
 class DashboardController < ApplicationController
-	before_action :load_report, only: [:statistics]
 	caches_page :statistics
 
 	LOGFILE_NAME = '/home/gerrit/dev/development.log'
@@ -19,104 +18,6 @@ class DashboardController < ApplicationController
 	end
 
 	def statistics
-		trackers = @r.aggregators.first.trackers
-
-		@logfile_name = LOGFILE_NAME
-		@parsed_requests = @r.source.parsed_requests
-		@tracker_http_status = trackers.find { |x| x.title == 'HTTP statuses returned' }
-		@tracker_http_status = @tracker_http_status.categories
-
-		@tracker_http_methods = trackers.find { |x| x.title == 'HTTP methods'}
-		@tracker_http_methods = @tracker_http_methods.categories.sort_by { |k, v| v }
-
-		@tracker_timespan = trackers.find { |x| x.title == 'Request timespan'}
-
-		# Loop through the request details and place them in a new array without the bucket
-		# data and the name of the route inside the hash for JSON output.
-		@tracker_request_details_temp = trackers.find { |x| x.title == 'Request duration'}
-		@tracker_request_details = []
-
-		@tracker_request_details_temp.categories.each do |route, details|
-			@tracker_request_details << {
-				:route => route,
-				:hits	=> details[:hits],
-				:sum => details[:sum],
-				:mean => details[:mean],
-				:min => details[:min],
-				:max => details[:max]
-			}
-		end
-
-		# Same as above with the database time.
-		@database_request_details_temp = trackers.find { |x| x.title == 'Database time'}
-		@database_request_details = []
-
-		@database_request_details_temp.categories.each do |route, details|
-			@database_request_details << {
-				:route => route,
-				:hits	=> details[:hits],
-				:sum => details[:sum],
-				:mean => details[:mean],
-				:min => details[:min],
-				:max => details[:max]
-			}
-		end
-
-		# Same as above with the view rendering time.
-		@view_rendering_details_temp = trackers.find { |x| x.title == 'View rendering time'}
-		@view_rendering_details = []
-
-		@view_rendering_details_temp.categories.each do |route, details|
-			@view_rendering_details << {
-				:route => route,
-				:hits	=> details[:hits],
-				:sum => details[:sum],
-				:mean => details[:mean],
-				:min => details[:min],
-				:max => details[:max]
-			}
-		end
-
-		# Same as above with the partial rendering time.
-		@partials_rendering_details_temp = trackers.find { |x| x.title == 'Partials rendering time'}
-		@partials_rendering_details = []
-
-		@partials_rendering_details_temp.categories.each do |route, details|
-			@partials_rendering_details << {
-				:route => route,
-				:hits	=> details[:hits],
-				:sum => details[:sum],
-				:mean => details[:mean],
-				:min => details[:min],
-				:max => details[:max]
-			}
-		end
-
-		@tracker_process_blockers = trackers.find { |x| x.title == 'Process blockers (> 1 sec duration)'}
-		@tracker_process_blockers = @tracker_process_blockers.categories.sort_by { |k, v| v }
-
-	end
-
-	private 
-
-	def logfile_name
-	end
-	
-	def load_report
-		@r = RequestLogAnalyzer::Controller.build(
-   		:output       => 'FixedWidth',
-      :format				=> :rails3,
-    	:silent				=> true,
-    	:source_files => LOGFILE_NAME
-  	)
-
-		# replace @r.run!
-  	@r.aggregators.each { |agg| agg.prepare }
-    
-    @r.source.each_request do |request|
-      @r.aggregate_request(@r.filter_request(request))
-    
-    end
-    @r.aggregators.each { |agg| agg.finalize }
+		@statistics = Statistics.new(LOGFILE_NAME)
 	end
 end
