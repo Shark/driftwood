@@ -13,6 +13,7 @@
 					%b Request Timespan:
 					%span#requestTimespan
 		%div.col-sm-6
+
 	%div.row
 		%div.col-sm-12
 			%h3 Route Hits
@@ -34,6 +35,15 @@
 		%div.col-sm-9#statusCodeTable
 	%div.row
 		%div.col-sm-12
+			%h3 HTTP Request Methods
+	%div.row
+		%div.col-sm-3
+			%div.chart-loading
+				%img= image_tag 'ajax-loader.gif'
+			%canvas.chart#requestMethodsCanvas{ :height => '200' }
+		%div.col-sm-9#requestMethodsTable
+	%div.row
+		%div.col-sm-12
 			%h3 Process Blockers (> 1 sec delay)
 		%div.col-sm-3
 			%div.chart-loading
@@ -41,3 +51,33 @@
 			%canvas.chart#processBlockers{ :height => '300' }
 		%div.col-sm-8.col-sm-offset-1
 			%div#processBlockersTable
+	%div.row
+		%div.col-sm-12
+			%h3 Database Time
+	%div.row
+		%div.col-sm-3
+			%div.chart-loading 
+				%img= image_tag 'ajax-loader.gif'
+			%canvas.chart#databaseTimeCanvas{ :height => '200' }
+		%div.col-sm-9
+			%div#databaseTimeTable
+	%div.row
+		%div.col-sm-12
+			%h3 View Rendering Time
+	%div.row
+		%div.col-sm-3
+			%div.chart-loading 
+				%img= image_tag 'ajax-loader.gif'
+			%canvas.chart#viewRenderingTimeCanvas{ :height => '200' }
+		%div.col-sm-9
+			%div#viewRenderingTimeTable
+	%div.row
+		%div.col-sm-12
+			%h3 Partials Rendering Time
+	%div.row
+		%div.col-sm-3
+			%div.chart-loading 
+				%img= image_tag 'ajax-loader.gif'
+			%canvas.chart#partialsRenderingTimeCanvas{ :height => '200' }
+		%div.col-sm-9
+			%div#partialsRenderingTimeTable
