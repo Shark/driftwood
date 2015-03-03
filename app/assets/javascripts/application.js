@@ -108,13 +108,14 @@
 		]
 	};
 
-	$.getJSON("/dashboard/statistics.js")
+$.getJSON("/dashboard/statistics.js")
 	 .done(function(stats) {
 	 	console.log("success");
 	 	displayStatistics(stats)
 	 }).fail(function(jqXHR, textStatus) {
 	 	console.log("fail ("+textStatus+")");
-	 	displayStatistics(sampleData);
+	 	$('.container-fluid').hide();
+	 	$('#error-message').removeClass('hidden');
 	 });
 });
 
@@ -169,7 +170,7 @@ function displayStatistics(stats) {
 		var httpMethods = stats.httpMethods.map(function(current, index, array) {
 			return {
 				label: current.method,
-				count: current.count,
+				value: current.count,
 				color: colors[index % colors.length]
 			};
 		});
@@ -189,7 +190,7 @@ function displayStatistics(stats) {
 
 		$('#requestMethodsCanvas').siblings('div.chart-loading').hide();
 		var requestMethodsCanvas = $('#requestMethodsCanvas').show().get(0).getContext("2d");
-		var requestMethodsChart = new Chart(requestMethodsCanvas).Pie(statusCodes, options);
+		var requestMethodsChart = new Chart(requestMethodsCanvas).Pie(httpMethods, options);
 		$("#requestMethodsTable").html(HandlebarsTemplates['dashboard/request-methods'](tableData));
 	}
 

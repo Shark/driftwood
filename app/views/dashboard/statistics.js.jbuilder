@@ -7,7 +7,7 @@ json.statusCodes @tracker_http_status do |status, count|
 	json.count count
 end
 
-json.httpMethods @tracker_http_status do |method, count|
+json.httpMethods @tracker_http_methods do |method, count|
 	json.method method
 	json.count count
 end

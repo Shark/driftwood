@@ -23,7 +23,6 @@ class DashboardController < ApplicationController
 
 		@logfile_name = LOGFILE_NAME
 		@parsed_requests = @r.source.parsed_requests
-		
 		@tracker_http_status = trackers.find { |x| x.title == 'HTTP statuses returned' }
 		@tracker_http_status = @tracker_http_status.categories
 
@@ -48,8 +47,6 @@ class DashboardController < ApplicationController
 			}
 		end
 
-		@tracker_request_details.sort_by! { |k| k[:hits] }
-		
 		# Same as above with the database time.
 		@database_request_details_temp = trackers.find { |x| x.title == 'Database time'}
 		@database_request_details = []
@@ -64,8 +61,6 @@ class DashboardController < ApplicationController
 				:max => details[:max]
 			}
 		end
-
-		@database_request_details.sort_by! { |k| k[:hits] }
 
 		# Same as above with the view rendering time.
 		@view_rendering_details_temp = trackers.find { |x| x.title == 'View rendering time'}
@@ -82,8 +77,6 @@ class DashboardController < ApplicationController
 			}
 		end
 
-		@view_rendering_details.sort_by! { |k| k[:hits] }
-
 		# Same as above with the partial rendering time.
 		@partials_rendering_details_temp = trackers.find { |x| x.title == 'Partials rendering time'}
 		@partials_rendering_details = []
@@ -98,8 +91,6 @@ class DashboardController < ApplicationController
 				:max => details[:max]
 			}
 		end
-
-		@partials_rendering_details.sort_by! { |k| k[:hits] }
 
 		@tracker_process_blockers = trackers.find { |x| x.title == 'Process blockers (> 1 sec duration)'}
 		@tracker_process_blockers = @tracker_process_blockers.categories.sort_by { |k, v| v }

@@ -1,7 +1,7 @@
 %div.container-fluid
 	%div.row
 		%div.col-sm-6
-			%h3 General Status
+			%h3 General Stats
 			%ul.list-group
 				%li.list-group-item
 					%b Filename:
@@ -24,6 +24,7 @@
 			%canvas.chart#routeHits{ :height => '200' }
 		%div.col-sm-9
 			%div#routeHitsTable
+			%span sum, mean, min and max are displayed in seconds
 	%div.row
 		%div.col-sm-12
 			%h3 Status Code Counts
@@ -61,6 +62,7 @@
 			%canvas.chart#databaseTimeCanvas{ :height => '200' }
 		%div.col-sm-9
 			%div#databaseTimeTable
+			%span sum, mean, min and max are displayed in seconds
 	%div.row
 		%div.col-sm-12
 			%h3 View Rendering Time
@@ -71,6 +73,7 @@
 			%canvas.chart#viewRenderingTimeCanvas{ :height => '200' }
 		%div.col-sm-9
 			%div#viewRenderingTimeTable
+			%span sum, mean, min and max are displayed in seconds
 	%div.row
 		%div.col-sm-12
 			%h3 Partials Rendering Time
@@ -81,3 +84,7 @@
 			%canvas.chart#partialsRenderingTimeCanvas{ :height => '200' }
 		%div.col-sm-9
 			%div#partialsRenderingTimeTable
+			%span sum, mean, min and max are displayed in seconds
+%div#error-message.hidden.alert.alert-danger.container
+	%b Oh snap!
+	Something went wrong. Please try to reload the page.
