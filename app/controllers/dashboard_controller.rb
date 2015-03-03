@@ -23,8 +23,12 @@ class DashboardController < ApplicationController
 
 		@logfile_name = LOGFILE_NAME
 		@parsed_requests = @r.source.parsed_requests
+		
 		@tracker_http_status = trackers.find { |x| x.title == 'HTTP statuses returned' }
 		@tracker_http_status = @tracker_http_status.categories
+
+		@tracker_http_methods = trackers.find { |x| x.title == 'HTTP methods'}
+		@tracker_http_methods = @tracker_http_methods.categories.sort_by { |k, v| v }
 
 		@tracker_timespan = trackers.find { |x| x.title == 'Request timespan'}
 
@@ -45,9 +49,60 @@ class DashboardController < ApplicationController
 		end
 
 		@tracker_request_details.sort_by! { |k| k[:hits] }
+		
+		# Same as above with the database time.
+		@database_request_details_temp = trackers.find { |x| x.title == 'Database time'}
+		@database_request_details = []
+
+		@database_request_details_temp.categories.each do |route, details|
+			@database_request_details << {
+				:route => route,
+				:hits	=> details[:hits],
+				:sum => details[:sum],
+				:mean => details[:mean],
+				:min => details[:min],
+				:max => details[:max]
+			}
+		end
+
+		@database_request_details.sort_by! { |k| k[:hits] }
+
+		# Same as above with the view rendering time.
+		@view_rendering_details_temp = trackers.find { |x| x.title == 'View rendering time'}
+		@view_rendering_details = []
+
+		@view_rendering_details_temp.categories.each do |route, details|
+			@view_rendering_details << {
+				:route => route,
+				:hits	=> details[:hits],
+				:sum => details[:sum],
+				:mean => details[:mean],
+				:min => details[:min],
+				:max => details[:max]
+			}
+		end
+
+		@view_rendering_details.sort_by! { |k| k[:hits] }
+
+		# Same as above with the partial rendering time.
+		@partials_rendering_details_temp = trackers.find { |x| x.title == 'Partials rendering time'}
+		@partials_rendering_details = []
+
+		@partials_rendering_details_temp.categories.each do |route, details|
+			@partials_rendering_details << {
+				:route => route,
+				:hits	=> details[:hits],
+				:sum => details[:sum],
+				:mean => details[:mean],
+				:min => details[:min],
+				:max => details[:max]
+			}
+		end
+
+		@partials_rendering_details.sort_by! { |k| k[:hits] }
 
 		@tracker_process_blockers = trackers.find { |x| x.title == 'Process blockers (> 1 sec duration)'}
-		@tracker_process_blockers = @tracker_process_blockers.categories.sort_by { |k, v| v}
+		@tracker_process_blockers = @tracker_process_blockers.categories.sort_by { |k, v| v }
 
 	end
 
