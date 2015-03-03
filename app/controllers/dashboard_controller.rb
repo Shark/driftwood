@@ -1,10 +1,21 @@
 require 'request_log_analyzer'
 
 class DashboardController < ApplicationController
-	before_action :load_report, except: [:index]
+	before_action :load_report, only: [:statistics]
+	caches_page :statistics
+
+	LOGFILE_NAME = '/home/gerrit/dev/development.log'
 
 	def index
-		
+		# Get the last change date from cache and the changed date of the actual file.
+		logfile_date_cached = Rails.cache.fetch('logfile_date')
+		logfile_date_current = File.mtime(LOGFILE_NAME)
+
+		# Delete the analyzed data from cache if the dates don't match.
+		if (logfile_date_cached != logfile_date_current)
+			Rails.cache.write('logfile_date', logfile_date_current)
+			expire_page :controller => 'dashboard', :action => 'statistics', :format => 'js'
+		end
 	end
 
 	def statistics
@@ -41,19 +52,24 @@ class DashboardController < ApplicationController
 
 	private 
 
+	def logfile_name
+	end
+	
 	def load_report
 		@r = RequestLogAnalyzer::Controller.build(
-     		:output       => 'FixedWidth',
-	        :format				=> :rails3,
-      		:silent				=> true,
-      		:source_files => '/home/felix/Arbeitsfläche/development.log'
-    	)
+   		:output       => 'FixedWidth',
+      :format				=> :rails3,
+    	:silent				=> true,
+    	:source_files => LOGFILE_NAME
+  	)
 
 		# replace @r.run!
-    	@r.aggregators.each { |agg| agg.prepare }
-      	@r.source.each_request do |request|
-        	@r.aggregate_request(@r.filter_request(request))
-      	end
-      	@r.aggregators.each { |agg| agg.finalize }    
+  	@r.aggregators.each { |agg| agg.prepare }
+    
+    @r.source.each_request do |request|
+      @r.aggregate_request(@r.filter_request(request))
+    
+    end
+    @r.aggregators.each { |agg| agg.finalize }
 	end
 end
