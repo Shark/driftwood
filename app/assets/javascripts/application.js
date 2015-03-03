@@ -12,11 +12,14 @@
 //
 //= require jquery
 //= require jquery_ujs
+////= require handlebars.runtime
+//= require_tree ./templates
 //= require twitter/bootstrap
 //= require turbolinks
-//= require_tree .
 //= require Chart
-
+//= require dataTables/jquery.dataTables
+//= require dataTables/bootstrap/2/jquery.dataTables.bootstrap
+//= require_tree .
 /*
 	API
 	Route: /dashboard/statistics
@@ -105,10 +108,23 @@ function displayStatistics(stats) {
 			};
 		});
 
-		var statusCodeCountCanvas = $('#statusCodeCountCanvas').get(0).getContext("2d");
+		var sum = 0;
+		stats.statusCodes.forEach(function(statusCode) {
+			sum += statusCode.count;
+		});
+		var tableData = stats.statusCodes.map(function(current) {
+			return {
+				statusCode: current.statusCode,
+				count: current.count,
+				percent: Math.round((current.count / sum)*100)
+			};
+		});
+
+		$('#statusCodeCountCanvas').siblings('div.chart-loading').hide();
+		var statusCodeCountCanvas = $('#statusCodeCountCanvas').show().get(0).getContext("2d");
 		var statusCodeCountChart = new Chart(statusCodeCountCanvas).Pie(statusCodes, options);
 		$('#statusCodeCountLegend').html(statusCodeCountChart.generateLegend());
-		$('#statusCodeCountCanvas').removeAttr('width').removeAttr("height").removeAttr("style");
+		$("#statusCodeTable").html(HandlebarsTemplates['dashboard/status-codes'](tableData));
 	}
 
 	if("parsedRequests" in stats) {
@@ -128,10 +144,27 @@ function displayStatistics(stats) {
 			}
 		});
 
-		var routeHitsCanvas = $('#routeHits').get(0).getContext("2d");
+		var sum = 0;
+		stats.requestDetails.forEach(function(route) {
+			sum += route.hits;
+		});
+		var tableData = stats.requestDetails.map(function(current) {
+			return {
+				route: current.route.replace("#","\n#"),
+				hits: current.hits,
+				percent: Math.round((current.hits / sum)*100),
+				sum: current.sum.toFixed(2),
+				mean: current.mean.toFixed(2),
+				min: current.min.toFixed(2),
+				max: current.max.toFixed(2)
+			};
+		});
+
+		$('#routeHits').siblings('div.chart-loading').hide();
+		var routeHitsCanvas = $('#routeHits').show().get(0).getContext("2d");
 		var routeHitsChart = new Chart(routeHitsCanvas).Pie(routeHits, options);
-		$('#routeHitsLegend').html(routeHitsChart.generateLegend());
-		$('#routeHits').removeAttr('width').removeAttr("height").removeAttr("style");
+		//$('#routeHits').removeAttr('width').removeAttr("height").removeAttr("style");
+		$('#routeHitsTable').html(HandlebarsTemplates['dashboard/route-hits'](tableData));
 	}
 
 	if("processBlockers" in stats) {
@@ -153,9 +186,30 @@ function displayStatistics(stats) {
 			]
 		};
 
-		var processBlockersCanvas = $('#processBlockers').get(0).getContext("2d");
+		var sum = 0;
+		stats.processBlockers.forEach(function(route) {
+			sum += route.hits;
+		});
+		var tableData = stats.processBlockers.map(function(current) {
+			return {
+				route: current.route,
+				hits: current.hits,
+				percent: Math.round((current.hits / sum)*100)
+			};
+		});
+
+		$('#processBlockers').siblings('div.chart-loading').hide();
+		var processBlockersCanvas = $('#processBlockers').show().get(0).getContext("2d");
 		var processBlockersChart = new Chart(processBlockersCanvas).Bar(processBlockers, {});
-		$('#processBlockersLegend').html(processBlockersChart.generateLegend());
-		$('#processBlockers').removeAttr('width').removeAttr("height").removeAttr("style");
+		//$('#processBlockers').removeAttr('width').removeAttr("height").removeAttr("style");
+		$('#processBlockersTable').html(HandlebarsTemplates['dashboard/process-blockers'](tableData));
 	}
+
+	$('.datatable').DataTable({
+		searching: false,
+    	paging: false,
+    	info: false,
+    	order: [[1,'desc'],[2,'desc']],
+    	autoWidth: false
+	});	
 }

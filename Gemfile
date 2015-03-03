@@ -30,6 +30,8 @@ gem 'less-rails'
 gem 'twitter-bootstrap-rails'
 gem 'chart-js-rails'
 gem "haml-rails", "~> 0.8"
+gem 'handlebars_assets'
+gem 'jquery-datatables-rails', '~> 3.1.1'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

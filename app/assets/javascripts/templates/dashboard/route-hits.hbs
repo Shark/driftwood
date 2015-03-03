@@ -1,0 +1,26 @@
+<table class="table table-striped table-bordered table-hover datatable">
+<thead>
+	<tr>
+		<th>Route</th>
+		<th>Hits</th>
+		<th>%</th>
+		<th>sum</th>
+		<th>mean</th>
+		<th>min</th>
+		<th>max</th>
+	</tr>
+</thead>
+<tbody>
+{{#each this}}
+	<tr>
+		<td class="route-name">{{route}}</td>
+		<td>{{hits}}</td>
+		<td>{{percent}}</td>
+		<td>{{sum}}</td>
+		<td>{{mean}}</td>
+		<td>{{min}}</td>
+		<td>{{max}}</td>
+	</tr>
+{{/each}}
+</tbody>
+</table>

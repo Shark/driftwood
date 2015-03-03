@@ -10,6 +10,7 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
+ *= require dataTables/bootstrap/2/jquery.dataTables.bootstrap
  *= require_tree .
  *= require_self
  */
@@ -29,6 +30,34 @@ ul.pie-legend {
 }
 
 canvas.chart {
-  width: auto;
-  height: 150px;
+  display: none;
+  width:auto;
+  height:200px;
+  margin-left:auto;
+  margin-right:auto;
+  vertical-align: middle;
+  margin-bottom:20px;
+}
+
+div.chart-loading {
+  height:200px;
+  margin-left:auto;
+  margin-right:auto;
+  vertical-align: middle;
+  margin-bottom:20px;
+  text-align: center;
+  vertical-align: middle;
+  line-height:100px;
+}
+
+div#routeHitsTable table {
+	table-layout:fixed;
+}
+
+div#routeHitsTable table td {
+	word-wrap:break-word;
+}
+
+td.route-name {
+	font-weight:bold;
 }
