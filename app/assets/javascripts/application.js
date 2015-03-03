@@ -69,6 +69,42 @@
 				"route": "BlaController.bla",
 				"hits": 10
 			}
+		],
+		"databaseTime": [
+			{
+				"route": "BlaController.bla",
+				"hits": 2,
+				"sum": 2,
+				"mean": 2.3,
+				"min": 0,
+				"max": 4
+			}
+		],
+		"viewRenderingTime": [
+			{
+				"route": "BlaController.bla",
+				"hits": 2,
+				"sum": 2,
+				"mean": 2.3,
+				"min": 0,
+				"max": 4
+			}
+		],
+		"partialsRenderingTime": [
+			{
+				"route": "BlaController.bla",
+				"hits": 2,
+				"sum": 2,
+				"mean": 2.3,
+				"min": 0,
+				"max": 4
+			}
+		],
+		"httpMethods": [
+			{
+				"method": "GET",
+				"count": 3
+			}
 		]
 	};
 
@@ -129,6 +165,34 @@ function displayStatistics(stats) {
 		$("#statusCodeTable").html(HandlebarsTemplates['dashboard/status-codes'](tableData));
 	}
 
+	if("httpMethods" in stats) {
+		var httpMethods = stats.httpMethods.map(function(current, index, array) {
+			return {
+				label: current.method,
+				count: current.count,
+				color: colors[index % colors.length]
+			};
+		});
+
+		var sum = 0;
+		stats.httpMethods.forEach(function(method) {
+			sum += method.count;
+		});
+		var tableData = stats.httpMethods.map(function(current, index) {
+			return {
+				method: current.method,
+				count: current.count,
+				percent: Math.round((current.count / sum)*100),
+				color: colors[index % colors.length]
+			};
+		});
+
+		$('#requestMethodsCanvas').siblings('div.chart-loading').hide();
+		var requestMethodsCanvas = $('#requestMethodsCanvas').show().get(0).getContext("2d");
+		var requestMethodsChart = new Chart(requestMethodsCanvas).Pie(statusCodes, options);
+		$("#requestMethodsTable").html(HandlebarsTemplates['dashboard/request-methods'](tableData));
+	}
+
 	if ("fileName" in stats) {
 		$('span#fileName').html(stats.fileName);
 	}
@@ -176,7 +240,6 @@ function displayStatistics(stats) {
 		$('#routeHits').siblings('div.chart-loading').hide();
 		var routeHitsCanvas = $('#routeHits').show().get(0).getContext("2d");
 		var routeHitsChart = new Chart(routeHitsCanvas).Pie(routeHits, options);
-		//$('#routeHits').removeAttr('width').removeAttr("height").removeAttr("style");
 		$('#routeHitsTable').html(HandlebarsTemplates['dashboard/route-hits'](tableData));
 	}
 
@@ -214,8 +277,103 @@ function displayStatistics(stats) {
 		$('#processBlockers').siblings('div.chart-loading').hide();
 		var processBlockersCanvas = $('#processBlockers').show().get(0).getContext("2d");
 		var processBlockersChart = new Chart(processBlockersCanvas).Bar(processBlockers, {});
-		//$('#processBlockers').removeAttr('width').removeAttr("height").removeAttr("style");
 		$('#processBlockersTable').html(HandlebarsTemplates['dashboard/process-blockers'](tableData));
+	}
+
+	if("databaseTime" in stats) {
+		var databaseTime = stats.databaseTime.map(function(current, index, array) {
+			return {
+				label: current.route,
+				value: current.hits,
+				color: colors[index % colors.length]
+			}
+		});
+
+		var sum = 0;
+		stats.databaseTime.forEach(function(route) {
+			sum += route.hits;
+		});
+		var tableData = stats.databaseTime.map(function(current, index) {
+			return {
+				route: current.route,
+				hits: current.hits,
+				percent: Math.round((current.hits / sum)*100),
+				sum: current.sum.toFixed(2),
+				mean: current.mean.toFixed(2),
+				min: current.min.toFixed(2),
+				max: current.max.toFixed(2),
+				color: colors[index % colors.length]
+			};
+		});
+
+		$('#databaseTimeCanvas').siblings('div.chart-loading').hide();
+		var databaseTimeCanvas = $('#databaseTimeCanvas').show().get(0).getContext("2d");
+		var databaseTimeChart = new Chart(databaseTimeCanvas).Pie(databaseTime, options);
+		$('#databaseTimeTable').html(HandlebarsTemplates['dashboard/database-time'](tableData));
+	}
+
+	if("viewRenderingTime" in stats) {
+		var viewRenderingTime = stats.viewRenderingTime.map(function(current, index, array) {
+			return {
+				label: current.route,
+				value: current.hits,
+				color: colors[index % colors.length]
+			}
+		});
+
+		var sum = 0;
+		stats.viewRenderingTime.forEach(function(route) {
+			sum += route.hits;
+		});
+		var tableData = stats.viewRenderingTime.map(function(current, index) {
+			return {
+				route: current.route,
+				hits: current.hits,
+				percent: Math.round((current.hits / sum)*100),
+				sum: current.sum.toFixed(2),
+				mean: current.mean.toFixed(2),
+				min: current.min.toFixed(2),
+				max: current.max.toFixed(2),
+				color: colors[index % colors.length]
+			};
+		});
+
+		$('#viewRenderingTimeCanvas').siblings('div.chart-loading').hide();
+		var viewRenderingTimeCanvas = $('#viewRenderingTimeCanvas').show().get(0).getContext("2d");
+		var viewRenderingTimeChart = new Chart(viewRenderingTimeCanvas).Pie(viewRenderingTime, options);
+		$('#viewRenderingTimeTable').html(HandlebarsTemplates['dashboard/view-rendering-time'](tableData));
+	}
+
+	if("partialsRenderingTime" in stats) {
+		var partialsRenderingTime = stats.partialsRenderingTime.map(function(current, index, array) {
+			return {
+				label: current.route,
+				value: current.hits,
+				color: colors[index % colors.length]
+			}
+		});
+
+		var sum = 0;
+		stats.partialsRenderingTime.forEach(function(route) {
+			sum += route.hits;
+		});
+		var tableData = stats.partialsRenderingTime.map(function(current, index) {
+			return {
+				route: current.route,
+				hits: current.hits,
+				percent: Math.round((current.hits / sum)*100),
+				sum: current.sum.toFixed(2),
+				mean: current.mean.toFixed(2),
+				min: current.min.toFixed(2),
+				max: current.max.toFixed(2),
+				color: colors[index % colors.length]
+			};
+		});
+
+		$('#partialsRenderingTimeCanvas').siblings('div.chart-loading').hide();
+		var partialsRenderingTimeCanvas = $('#partialsRenderingTimeCanvas').show().get(0).getContext("2d");
+		var partialsRenderingTimeChart = new Chart(partialsRenderingTimeCanvas).Pie(partialsRenderingTime, options);
+		$('#partialsRenderingTimeTable').html(HandlebarsTemplates['dashboard/view-rendering-time'](tableData));
 	}
 
 	$('.datatable').DataTable({
@@ -224,5 +382,5 @@ function displayStatistics(stats) {
     	info: false,
     	order: [[1,'desc'],[2,'desc']],
     	autoWidth: false
-	});	
+	});
 }
