@@ -13,6 +13,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'request-log-analyzer', '~> 1.13.4'
 gem 'pry-rails'
+gem 'actionpack-page_caching'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 

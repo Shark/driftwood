@@ -69,7 +69,7 @@
 		]
 	};
 
-	$.getJSON("/dashboard/statistics")
+	$.getJSON("/dashboard/statistics.js")
 	 .done(function(stats) {
 	 	console.log("success");
 	 	displayStatistics(stats)

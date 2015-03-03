@@ -6,8 +6,8 @@ json.statusCodes @tracker_http_status do |status, count|
 end
 
 json.requestTimespan do
-	json.begin @tracker_timespan.first
-	json.end @tracker_timespan.last
+	json.begin @tracker_timespan.first_timestamp
+	json.end @tracker_timespan.last_timestamp
 end
 
 json.requestDetails @tracker_request_details
