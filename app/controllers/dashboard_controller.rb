@@ -43,11 +43,17 @@ class DashboardController < ApplicationController
 
 	def load_report
 		@r = RequestLogAnalyzer::Controller.build(
-      :output       => 'FixedWidth',
-      :format				=> :rails3,
-      :silent				=> true,
-      :source_files => '/home/felix/Arbeitsfläche/development.log'
-    )
-    @r.run!
+     		:output       => 'FixedWidth',
+	        :format				=> :rails3,
+      		:silent				=> true,
+      		:source_files => '/home/felix/Arbeitsfläche/development.log'
+    	)
+
+		# replace @r.run!
+    	@r.aggregators.each { |agg| agg.prepare }
+      	@r.source.each_request do |request|
+        	@r.aggregate_request(@r.filter_request(request))
+      	end
+      	@r.aggregators.each { |agg| agg.finalize }    
 	end
 end
