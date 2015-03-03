@@ -89,7 +89,9 @@ function displayStatistics(stats) {
 		"#FAA43A",
 		"#60BD68",
 		"#F17CB0",
+		"#CC0000",
 		"#B2912F",
+		"#999999",
 		"#B276B2",
 		"#DECF3F",
 		"#F15854"
@@ -112,19 +114,23 @@ function displayStatistics(stats) {
 		stats.statusCodes.forEach(function(statusCode) {
 			sum += statusCode.count;
 		});
-		var tableData = stats.statusCodes.map(function(current) {
+		var tableData = stats.statusCodes.map(function(current, index) {
 			return {
 				statusCode: current.statusCode,
 				count: current.count,
-				percent: Math.round((current.count / sum)*100)
+				percent: Math.round((current.count / sum)*100),
+				color: colors[index % colors.length]
 			};
 		});
 
 		$('#statusCodeCountCanvas').siblings('div.chart-loading').hide();
 		var statusCodeCountCanvas = $('#statusCodeCountCanvas').show().get(0).getContext("2d");
 		var statusCodeCountChart = new Chart(statusCodeCountCanvas).Pie(statusCodes, options);
-		$('#statusCodeCountLegend').html(statusCodeCountChart.generateLegend());
 		$("#statusCodeTable").html(HandlebarsTemplates['dashboard/status-codes'](tableData));
+	}
+
+	if ("fileName" in stats) {
+		$('span#fileName').html(stats.fileName);
 	}
 
 	if("parsedRequests" in stats) {
@@ -132,7 +138,13 @@ function displayStatistics(stats) {
 	}
 
 	if("requestTimespan" in stats) {
-		$('span#requestTimespan').html(stats.requestTimespan.begin+'-'+stats.requestTimespan.end);
+		var date_begin = new Date(stats.requestTimespan.begin);
+		var date_end = new Date(stats.requestTimespan.end);
+
+		$('span#requestTimespan').html(
+			date_begin.toLocaleDateString() + ' ' + date_begin.toLocaleTimeString() + ' &ndash; ' +
+			date_end.toLocaleDateString() + ' ' + date_end.toLocaleTimeString()
+		);
 	}
 
 	if("requestDetails" in stats) {
@@ -148,15 +160,16 @@ function displayStatistics(stats) {
 		stats.requestDetails.forEach(function(route) {
 			sum += route.hits;
 		});
-		var tableData = stats.requestDetails.map(function(current) {
+		var tableData = stats.requestDetails.map(function(current, index) {
 			return {
-				route: current.route.replace("#","\n#"),
+				route: current.route,
 				hits: current.hits,
 				percent: Math.round((current.hits / sum)*100),
 				sum: current.sum.toFixed(2),
 				mean: current.mean.toFixed(2),
 				min: current.min.toFixed(2),
-				max: current.max.toFixed(2)
+				max: current.max.toFixed(2),
+				color: colors[index % colors.length]
 			};
 		});
 

@@ -2,7 +2,7 @@
 <thead><tr><th>Status Code</th><th>Hits</th><th>%</th></tr></thead>
 <tbody>
 {{#each this}}
-	<tr><td>{{statusCode}}</td><td>{{count}}</td><td>{{percent}}</td></tr>
+	<tr><td><div style="background-color: {{color}}" class="color-bullet img-circle"></div>{{statusCode}}</td><td>{{count}}</td><td>{{percent}}</td></tr>
 {{/each}}
 </tbody>
 </table>

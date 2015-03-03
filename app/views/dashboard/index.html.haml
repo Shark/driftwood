@@ -1,43 +1,43 @@
 %div.container-fluid
 	%div.row
 		%div.col-sm-6
-			%h3 General Stats
-			%ul
-				%li
-					Parsed Requests:
+			%h3 General Status
+			%ul.list-group
+				%li.list-group-item
+					%b Filename:
+					%span#fileName
+				%li.list-group-item
+					%b Parsed Requests:
 					%span#parsedRequests
-				%li
-					Request Timespan:
+				%li.list-group-item
+					%b Request Timespan:
 					%span#requestTimespan
 		%div.col-sm-6
 	%div.row
 		%div.col-sm-12
 			%h3 Route Hits
-			%div.row
-				%div.col-sm-12
-					%div.chart-loading loading...
-					%canvas.chart#routeHits{ :height => '200' }
-			%div.row
-				%div.col-sm-12
-					%div#routeHitsTable
 	%div.row
-		%div.col-sm-4
+		%div.col-sm-3
+			%div.chart-loading 
+				%img= image_tag 'ajax-loader.gif'
+			%canvas.chart#routeHits{ :height => '200' }
+		%div.col-sm-9
+			%div#routeHitsTable
+	%div.row
+		%div.col-sm-12
 			%h3 Status Code Counts
-			%div.row
-				%div.col-sm-8
-					%div.chart-loading loading...
-					%canvas.chart#statusCodeCountCanvas{ :height => '200' }
-				%div.col-sm-4
-					%div#statusCodeCountLegend
-			%div.row
-				%div.col-sm-12#statusCodeTable
-		%div.col-sm-4
-			%h3 Process Blockers
-			%div.row
-				%div.col-sm-12
-					%div.chart-loading loading...
-					%canvas.chart#processBlockers{ :height => '300' }
-			%div.row
-				%div.col-sm-12
-					%div#processBlockersTable
-		%div.col-sm-4
+	%div.row
+		%div.col-sm-3
+			%div.chart-loading
+				%img= image_tag 'ajax-loader.gif'
+			%canvas.chart#statusCodeCountCanvas{ :height => '200' }
+		%div.col-sm-9#statusCodeTable
+	%div.row
+		%div.col-sm-12
+			%h3 Process Blockers (> 1 sec delay)
+		%div.col-sm-3
+			%div.chart-loading
+				%img= image_tag 'ajax-loader.gif'
+			%canvas.chart#processBlockers{ :height => '300' }
+		%div.col-sm-8.col-sm-offset-1
+			%div#processBlockersTable

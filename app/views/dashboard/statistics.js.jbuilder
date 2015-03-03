@@ -1,3 +1,5 @@
+json.fileName @logfile_name
+
 json.parsedRequests @parsed_requests
 
 json.statusCodes @tracker_http_status do |status, count|

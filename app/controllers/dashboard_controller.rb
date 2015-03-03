@@ -21,6 +21,7 @@ class DashboardController < ApplicationController
 	def statistics
 		trackers = @r.aggregators.first.trackers
 
+		@logfile_name = LOGFILE_NAME
 		@parsed_requests = @r.source.parsed_requests
 		@tracker_http_status = trackers.find { |x| x.title == 'HTTP statuses returned' }
 		@tracker_http_status = @tracker_http_status.categories
